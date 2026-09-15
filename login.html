@@ -3,132 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Sign In | PayTrack SME</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#f7f8fa;color:#111827}
+    .login-shell{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr)}
+    .login-brand-panel{background:#111827;color:#fff;padding:64px;display:flex;flex-direction:column;justify-content:space-between}
+    .login-logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px}
+    .login-logo-mark{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;overflow:hidden;background:transparent;flex:0 0 auto}
+    .login-logo-mark img{width:100%;height:100%;object-fit:contain;display:block}
+    .login-brand-copy{max-width:520px}
+    .login-brand-copy h1{font-size:44px;line-height:1.08;margin:0 0 18px}
+    .login-brand-copy p{color:#cbd5e1;line-height:1.7;font-size:16px;margin:0}
+    .login-form-side{padding:48px;display:flex;align-items:center;justify-content:center}
+    .login-card{width:min(100%,480px);background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:32px;box-shadow:0 20px 60px rgba(15,23,42,.06)}
+    .login-card h2{margin:0 0 8px;font-size:26px}
+    .login-card>p{margin:0 0 24px;color:#667085}
+    .login-field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+    .login-field label{font-size:12px;font-weight:600}
+    .login-field input{width:100%;min-height:44px;border:1px solid #d0d5dd;border-radius:9px;padding:0 12px;font:inherit;outline:none;background:#fff}
+    .login-field input:focus{border-color:#98a2b3;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+    .login-submit{width:100%;min-height:46px;margin-top:4px;display:flex;align-items:center;justify-content:center}
+    .login-error{margin-top:12px;padding:10px 12px;border-radius:8px;background:#fef3f2;color:#b42318;font-size:12px}
+    .login-signup{margin-top:18px;text-align:center;color:#667085;font-size:13px}
+    .login-signup a{color:#2563eb;font-weight:600;text-decoration:none}
+    @media(max-width:900px){.login-shell{grid-template-columns:1fr}.login-brand-panel{display:none}.login-form-side{padding:24px}.login-card{padding:26px}}
+  </style>
 </head>
-
 <body>
-
-  <main class="auth-page">
-
-    <section class="auth-card">
-
-      <a
-        href="index.html"
-        class="auth-brand"
-      >
-
-        <div class="brand-mark">
-          PT
+  <div class="login-shell">
+    <section class="login-brand-panel">
+      <div class="login-logo">
+        <div class="login-logo-mark">
+          <img src="Paytrack Logo.png" alt="PayTrack SME">
         </div>
-
-        <div>
-          <h1>PayTrack SME</h1>
-          <p>Payment Management System</p>
-        </div>
-
-      </a>
-
-
-      <div class="auth-form-header">
-
-        <h2>
-          Welcome back
-        </h2>
-
-        <p>
-          Sign in to continue to your workspace.
-        </p>
-
+        <span>PayTrack SME</span>
       </div>
 
-
-      <form id="loginForm">
-
-        <div class="form-group">
-
-          <label for="loginEmail">
-            Email address
-          </label>
-
-          <input
-            type="email"
-            id="loginEmail"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="loginPassword">
-            Password
-          </label>
-
-          <input
-            type="password"
-            id="loginPassword"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-            required
-          >
-
-        </div>
-
-
-        <div
-          class="auth-error"
-          id="loginError"
-          hidden
-        ></div>
-
-
-        <button
-          type="submit"
-          class="primary-button auth-submit-button"
-          id="loginSubmitButton"
-        >
-          Sign In
-        </button>
-
-      </form>
-
-
-      <div class="auth-footer">
-
-        <span>
-          Don't have an account?
-        </span>
-
-        <a href="signup.html">
-          Create account
-        </a>
-
+      <div class="login-brand-copy">
+        <h1>Manage payments with clarity.</h1>
+        <p>Sign in to your organisation workspace to manage customers, payment requests, transactions, receipts, reconciliation and reports.</p>
       </div>
 
+      <small style="color:#94a3b8">PayTrack SME · Lightweight payment management</small>
     </section>
 
-  </main>
+    <main class="login-form-side">
+      <form class="login-card" id="loginForm">
+        <div class="login-logo" style="color:#111827;margin-bottom:24px;">
+          <div class="login-logo-mark">
+            <img src="Paytrack Logo.png" alt="PayTrack SME">
+          </div>
+          <span>PayTrack SME</span>
+        </div>
 
+        <h2>Welcome back</h2>
+        <p>Sign in to continue to your workspace.</p>
+
+        <div class="login-field">
+          <label for="loginEmail">Email address</label>
+          <input id="loginEmail" name="email" type="email" autocomplete="email" required>
+        </div>
+
+        <div class="login-field">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="primary-button login-submit" id="loginButton">Sign In</button>
+        <div class="login-error" id="loginError" hidden></div>
+        <div class="login-signup">New to PayTrack? <a href="signup.html">Create an account</a></div>
+      </form>
+    </main>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
   <script src="js/auth.js"></script>
-
 </body>
 </html>

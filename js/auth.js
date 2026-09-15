@@ -1,488 +1,76 @@
-/* ==================================================
-   PAYTRACK SME — AUTHENTICATION
-================================================== */
+(() => {
+  const client = window.paytrackSupabase;
 
-const supabaseClient =
-  window.paytrackSupabase;
-
-
-/* ==================================================
-   AUTH PAGE REDIRECT
-================================================== */
-
-async function redirectAuthenticatedUser() {
-
-  const isLoginPage =
-    document.getElementById(
-      "loginForm"
-    );
-
-  const isSignupPage =
-    document.getElementById(
-      "signupForm"
-    );
-
-
-  if (
-    !isLoginPage &&
-    !isSignupPage
-  ) {
+  if (!client) {
+    console.error("PayTrack Supabase client is not available.");
     return;
   }
 
+  const loginForm = document.getElementById("loginForm");
+  const loginEmail = document.getElementById("loginEmail");
+  const loginPassword = document.getElementById("loginPassword");
+  const loginButton = document.getElementById("loginButton");
+  const loginError = document.getElementById("loginError");
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth
-      .getSession();
-
-
-  if (error) {
-
-    console.error(
-      "Session check failed:",
-      error
-    );
-
-    return;
+  function showLoginError(message) {
+    if (!loginError) return;
+    loginError.textContent = message || "Unable to sign in.";
+    loginError.hidden = false;
   }
 
-
-  if (data.session) {
-
-    window.location.replace(
-      "pages/dashboard.html"
-    );
-
+  function clearLoginError() {
+    if (!loginError) return;
+    loginError.textContent = "";
+    loginError.hidden = true;
   }
 
-}
-
-
-
-/* ==================================================
-   ERROR HELPERS
-================================================== */
-
-function showAuthError(
-  element,
-  message
-) {
-
-  if (!element) {
-    return;
-  }
-
-
-  element.textContent =
-    message;
-
-
-  element.hidden =
-    false;
-
-}
-
-
-function clearAuthError(
-  element
-) {
-
-  if (!element) {
-    return;
-  }
-
-
-  element.textContent = "";
-
-  element.hidden =
-    true;
-
-}
-
-
-
-/* ==================================================
-   LOGIN
-================================================== */
-
-const loginForm =
-  document.getElementById(
-    "loginForm"
-  );
-
-
-if (loginForm) {
-
-  const loginEmail =
-    document.getElementById(
-      "loginEmail"
-    );
-
-  const loginPassword =
-    document.getElementById(
-      "loginPassword"
-    );
-
-  const loginError =
-    document.getElementById(
-      "loginError"
-    );
-
-  const loginSubmitButton =
-    document.getElementById(
-      "loginSubmitButton"
-    );
-
-
-  loginForm.addEventListener(
-    "submit",
-    async (event) => {
-
-      event.preventDefault();
-
-
-      clearAuthError(
-        loginError
-      );
-
-
-      const email =
-        loginEmail.value
-          .trim();
-
-
-      const password =
-        loginPassword.value;
-
-
-      if (
-        !email ||
-        !password
-      ) {
-
-        showAuthError(
-          loginError,
-          "Enter your email and password."
-        );
-
-        return;
-
-      }
-
-
-      loginSubmitButton.disabled =
-        true;
-
-
-      loginSubmitButton.textContent =
-        "Signing In...";
-
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient.auth
-            .signInWithPassword({
-              email,
-              password
-            });
-
-
-        if (error) {
-
-          console.error(
-            "Login failed:",
-            error
-          );
-
-
-          showAuthError(
-            loginError,
-            error.message
-          );
-
-
-          return;
-
-        }
-
-
-        if (
-          !data ||
-          !data.session
-        ) {
-
-          console.error(
-            "Login succeeded but no session was returned.",
-            data
-          );
-
-
-          showAuthError(
-            loginError,
-            "Sign in succeeded, but no session was created."
-          );
-
-
-          return;
-
-        }
-
-
-        console.log(
-          "Login successful:",
-          data.user?.email
-        );
-
-
-        window.location.replace(
-          "pages/dashboard.html"
-        );
-
-      }
-      catch (error) {
-
-        console.error(
-          "Unexpected login error:",
-          error
-        );
-
-
-        showAuthError(
-          loginError,
-          "Unable to sign in. Please try again."
-        );
-
-      }
-      finally {
-
-        loginSubmitButton.disabled =
-          false;
-
-
-        loginSubmitButton.textContent =
-          "Sign In";
-
-      }
-
+  async function redirectAuthenticatedUser() {
+    const { data, error } = await client.auth.getSession();
+    if (error) {
+      console.error("Unable to read auth session:", error);
+      return;
     }
-  );
 
-}
-
-
-
-/* ==================================================
-   SIGN UP
-================================================== */
-
-const signupForm =
-  document.getElementById(
-    "signupForm"
-  );
-
-
-if (signupForm) {
-
-  const signupFullName =
-    document.getElementById(
-      "signupFullName"
-    );
-
-  const signupEmail =
-    document.getElementById(
-      "signupEmail"
-    );
-
-  const signupPassword =
-    document.getElementById(
-      "signupPassword"
-    );
-
-  const signupConfirmPassword =
-    document.getElementById(
-      "signupConfirmPassword"
-    );
-
-  const signupError =
-    document.getElementById(
-      "signupError"
-    );
-
-  const signupSubmitButton =
-    document.getElementById(
-      "signupSubmitButton"
-    );
-
-
-  signupForm.addEventListener(
-    "submit",
-    async (event) => {
-
-      event.preventDefault();
-
-
-      clearAuthError(
-        signupError
-      );
-
-
-      const fullName =
-        signupFullName.value
-          .trim();
-
-
-      const email =
-        signupEmail.value
-          .trim();
-
-
-      const password =
-        signupPassword.value;
-
-
-      const confirmPassword =
-        signupConfirmPassword.value;
-
-
-      if (
-        password !==
-        confirmPassword
-      ) {
-
-        showAuthError(
-          signupError,
-          "Passwords do not match."
-        );
-
-        return;
-
-      }
-
-
-      if (
-        password.length < 8
-      ) {
-
-        showAuthError(
-          signupError,
-          "Password must contain at least 8 characters."
-        );
-
-        return;
-
-      }
-
-
-      signupSubmitButton.disabled =
-        true;
-
-
-      signupSubmitButton.textContent =
-        "Creating Account...";
-
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient.auth
-            .signUp({
-
-              email,
-
-              password,
-
-              options: {
-
-                data: {
-                  full_name:
-                    fullName
-                }
-
-              }
-
-            });
-
-
-        if (error) {
-
-          console.error(
-            "Signup failed:",
-            error
-          );
-
-
-          showAuthError(
-            signupError,
-            error.message
-          );
-
-
-          return;
-
-        }
-
-
-        if (data.session) {
-
-          window.location.replace(
-            "pages/dashboard.html"
-          );
-
-          return;
-
-        }
-
-
-        showAuthError(
-          signupError,
-          "Account created. Please confirm your email before signing in."
-        );
-
-      }
-      catch (error) {
-
-        console.error(
-          "Unexpected signup error:",
-          error
-        );
-
-
-        showAuthError(
-          signupError,
-          "Unable to create account."
-        );
-
-      }
-      finally {
-
-        signupSubmitButton.disabled =
-          false;
-
-
-        signupSubmitButton.textContent =
-          "Create Account";
-
-      }
-
+    if (data?.session) {
+      window.location.replace("pages/dashboard.html");
     }
-  );
+  }
 
-}
+  redirectAuthenticatedUser();
 
+  if (!loginForm) return;
 
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearLoginError();
 
-/* ==================================================
-   INITIALISE AUTH PAGE
-================================================== */
+    const email = loginEmail?.value.trim();
+    const password = loginPassword?.value || "";
 
-redirectAuthenticatedUser();
+    if (!email || !password) {
+      showLoginError("Enter your email address and password.");
+      return;
+    }
+
+    if (loginButton) {
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
+    }
+
+    try {
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (!data?.session) throw new Error("A login session could not be created.");
+
+      window.location.replace("pages/dashboard.html");
+    } catch (error) {
+      console.error("Sign in failed:", error);
+      showLoginError(error?.message || "Unable to sign in.");
+    } finally {
+      if (loginButton) {
+        loginButton.disabled = false;
+        loginButton.textContent = "Sign In";
+      }
+    }
+  });
+})();
