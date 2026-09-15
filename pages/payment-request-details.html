@@ -539,6 +539,64 @@
 
 </div>
 
+
+<div
+  class="modal-backdrop"
+  id="editPaymentRequestModalBackdrop"
+  hidden
+>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editPaymentRequestModalTitle">
+    <div class="modal-header">
+      <div>
+        <h2 id="editPaymentRequestModalTitle">Edit Payment Request</h2>
+        <p>Update the request information without changing recorded payment history.</p>
+      </div>
+      <button type="button" class="modal-close-button" id="closeEditPaymentRequestModal" aria-label="Close">×</button>
+    </div>
+    <form id="editPaymentRequestForm">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-group-full">
+            <label for="editRequestPurpose">Payment Purpose <span class="required">*</span></label>
+            <input type="text" id="editRequestPurpose" required>
+          </div>
+          <div class="form-group">
+            <label for="editRequestDueDate">Due Date <span class="required">*</span></label>
+            <input type="date" id="editRequestDueDate" required>
+          </div>
+          <div class="form-group">
+            <label for="editBusinessReferenceType">Reference Type <span class="required">*</span></label>
+            <select id="editBusinessReferenceType" required>
+              <option value="Property">Property</option>
+              <option value="Project">Project</option>
+              <option value="Reservation">Reservation</option>
+              <option value="Service">Service</option>
+              <option value="Invoice">Invoice</option>
+              <option value="Order">Order</option>
+              <option value="Product/Supply">Product / Supply</option>
+              <option value="Supply Contract">Supply Contract</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group form-group-full">
+            <label for="editBusinessReference">External Business Reference <span class="required">*</span></label>
+            <input type="text" id="editBusinessReference" required>
+          </div>
+          <div class="form-group form-group-full">
+            <label for="editRequestDescription">Description / Notes</label>
+            <textarea id="editRequestDescription" rows="4" placeholder="Optional description or notes..."></textarea>
+          </div>
+          <div class="auth-error form-group-full" id="editPaymentRequestError" hidden></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="secondary-button" id="cancelEditPaymentRequestModal">Cancel</button>
+        <button type="submit" class="primary-button" id="saveEditPaymentRequestButton">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div
   class="modal-backdrop"
   id="recordPaymentModalBackdrop"

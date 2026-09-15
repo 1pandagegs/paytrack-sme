@@ -5152,14 +5152,38 @@ if(requestDetailRoot){
     }catch(err){console.error(err);document.getElementById("paymentAmountError").textContent=err.message||"Unable to record payment.";}
     finally{saveBtn.disabled=false;saveBtn.textContent="Record Payment";}
   });
-  document.getElementById("editPaymentRequestButton")?.addEventListener("click",async()=>{
-    if(!currentRequest)return;
-    const purpose=prompt("Payment purpose",currentRequest.purpose||""); if(purpose===null)return;
-    const dueDate=prompt("Due date (YYYY-MM-DD)",currentRequest.due_date||""); if(dueDate===null)return;
-    const reference=prompt("External business reference",currentRequest.external_business_reference||""); if(reference===null)return;
-    const description=prompt("Description / notes",currentRequest.description||""); if(description===null)return;
-    const {error}=await supabaseClient.from("payment_requests").update({purpose:purpose.trim()||currentRequest.purpose,due_date:dueDate.trim()||currentRequest.due_date,external_business_reference:reference.trim()||currentRequest.external_business_reference,description:description.trim()||null}).eq("id",currentRequest.id);
-    if(error){alert(error.message||"Unable to update request.");return;} await loadRequestDetail();
+  const editRequestBackdrop=document.getElementById("editPaymentRequestModalBackdrop");
+  const editRequestForm=document.getElementById("editPaymentRequestForm");
+  function openEditRequestModal(){
+    if(!currentRequest||!editRequestBackdrop)return;
+    document.getElementById("editRequestPurpose").value=currentRequest.purpose||"";
+    document.getElementById("editRequestDueDate").value=currentRequest.due_date||"";
+    document.getElementById("editBusinessReferenceType").value=currentRequest.business_reference_type||"Other";
+    document.getElementById("editBusinessReference").value=currentRequest.external_business_reference||"";
+    document.getElementById("editRequestDescription").value=currentRequest.description||"";
+    const err=document.getElementById("editPaymentRequestError"); if(err){err.hidden=true;err.textContent="";}
+    editRequestBackdrop.hidden=false;document.body.style.overflow="hidden";
+  }
+  function closeEditRequestModal(){if(editRequestBackdrop){editRequestBackdrop.hidden=true;document.body.style.overflow="";}}
+  document.getElementById("editPaymentRequestButton")?.addEventListener("click",openEditRequestModal);
+  document.getElementById("closeEditPaymentRequestModal")?.addEventListener("click",closeEditRequestModal);
+  document.getElementById("cancelEditPaymentRequestModal")?.addEventListener("click",closeEditRequestModal);
+  editRequestBackdrop?.addEventListener("click",e=>{if(e.target===editRequestBackdrop)closeEditRequestModal();});
+  editRequestForm?.addEventListener("submit",async e=>{
+    e.preventDefault(); if(!currentRequest)return;
+    const purpose=document.getElementById("editRequestPurpose").value.trim();
+    const dueDate=document.getElementById("editRequestDueDate").value;
+    const referenceType=document.getElementById("editBusinessReferenceType").value;
+    const reference=document.getElementById("editBusinessReference").value.trim();
+    const description=document.getElementById("editRequestDescription").value.trim()||null;
+    const err=document.getElementById("editPaymentRequestError");
+    if(!purpose||!dueDate||!referenceType||!reference){if(err){err.textContent="Complete all required fields.";err.hidden=false;}return;}
+    const btn=document.getElementById("saveEditPaymentRequestButton"); if(btn){btn.disabled=true;btn.textContent="Saving...";}
+    try{
+      const {error}=await supabaseClient.from("payment_requests").update({purpose,due_date:dueDate,business_reference_type:referenceType,external_business_reference:reference,description}).eq("id",currentRequest.id);
+      if(error)throw error; closeEditRequestModal(); await loadRequestDetail();
+    }catch(error){console.error(error);if(err){err.textContent=error.message||"Unable to update request.";err.hidden=false;}}
+    finally{if(btn){btn.disabled=false;btn.textContent="Save Changes";}}
   });
   await loadRequestDetail();
 }
@@ -5224,7 +5248,7 @@ if(txDetailNumber){
   }
   const modal=document.getElementById("reconciliationModalBackdrop");const open=()=>{document.getElementById("verificationDate").value ||= new Date().toISOString().slice(0,10);modal.hidden=false;};const close=()=>modal.hidden=true;
   document.getElementById("reconcileTransactionButton")?.addEventListener("click",open);document.getElementById("closeReconciliationModal")?.addEventListener("click",close);document.getElementById("cancelReconciliationModal")?.addEventListener("click",close);
-  document.getElementById("reconciliationForm")?.addEventListener("submit",async e=>{e.preventDefault();const method=document.getElementById("verificationMethod").value,date=document.getElementById("verificationDate").value;if(!method||!date){alert("Select a verification method and date.");return;}try{const ref=document.getElementById("verificationReference").value.trim()||null;const notes=document.getElementById("reconciliationNotes").value.trim()||null;const payload={organisation_id:tx.organisation_id,transaction_id:tx.id,verification_method:method,verification_date:date,verification_reference:ref,notes};const {error}=await supabaseClient.from("reconciliations").insert(payload);if(error)throw error;const {error:u}=await supabaseClient.from("transactions").update({reconciliation_status:"reconciled"}).eq("id",tx.id);if(u)throw u;close();await loadTxDetail();const toast=document.getElementById("reconciliationToast");if(toast){toast.hidden=false;setTimeout(()=>toast.hidden=true,2500);}}catch(err){console.error(err);alert(err.message||"Unable to reconcile transaction.");}});
+  document.getElementById("reconciliationForm")?.addEventListener("submit",async e=>{e.preventDefault();const rawMethod=document.getElementById("verificationMethod").value,date=document.getElementById("verificationDate").value;const verificationMethodMap={"Bank Statement":"bank_statement","Bank Alert":"bank_alert","POS Record":"pos_record","Cash Record":"cash_record","Other Verified Evidence":"other_verified_evidence"};const method=verificationMethodMap[rawMethod]||rawMethod;if(!method||!date){alert("Select a verification method and date.");return;}try{const ref=document.getElementById("verificationReference").value.trim()||null;const notes=document.getElementById("reconciliationNotes").value.trim()||null;const payload={organisation_id:tx.organisation_id,transaction_id:tx.id,verification_method:method,verification_date:date,verification_reference:ref,notes};const {error}=await supabaseClient.from("reconciliations").insert(payload);if(error)throw error;const {error:u}=await supabaseClient.from("transactions").update({reconciliation_status:"reconciled"}).eq("id",tx.id);if(u)throw u;close();await loadTxDetail();const toast=document.getElementById("reconciliationToast");if(toast){toast.hidden=false;setTimeout(()=>toast.hidden=true,2500);}}catch(err){console.error(err);alert(err.message||"Unable to reconcile transaction.");}});
   document.getElementById("viewReceiptButton")?.addEventListener("click",async()=>{ if(!receipt && tx){try{const {data:{user}}=await supabaseClient.auth.getUser();await generateReceipt(tx.organisation_id,tx.id,user?.id||null);const {data:rec}=await supabaseClient.from("receipts").select("id,receipt_number,generated_at").eq("transaction_id",tx.id).maybeSingle();receipt=rec||null;}catch(e){console.error(e);}} if(!receipt){alert("No receipt is available for this transaction.");return;} openReceiptPreview({tx,receipt,workspace:workspaceState}); });
   await loadTxDetail();
 }
