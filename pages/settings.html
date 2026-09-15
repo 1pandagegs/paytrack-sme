@@ -4,14 +4,120 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings | PayTrack SME</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body>
-  <main><h1>Settings</h1></main>
-  <script src="../js/utils.js"></script>
-  <script src="../js/supabase.js"></script>
-  <script src="../js/app.js"></script>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="brand"><div class="brand-mark">PT</div><span>PayTrack SME</span></div>
+      <select class="organization-select" id="organisationSelect"><option>Loading...</option></select>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link"><span class="nav-icon">⌂</span>Overview</a>
+      <a href="customers.html" class="nav-link"><span class="nav-icon">◎</span>Customers</a>
+      <a href="payment-requests.html" class="nav-link"><span class="nav-icon">▤</span>Payment Requests</a>
+      <a href="transactions.html" class="nav-link"><span class="nav-icon">⇄</span>Transactions</a>
+      <a href="reconciliation.html" class="nav-link"><span class="nav-icon">✓</span>Reconciliation</a>
+      <a href="reports.html" class="nav-link"><span class="nav-icon">◫</span>Reports</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="settings.html" class="nav-link active"><span class="nav-icon">⚙</span>Settings</a>
+      <div class="user-card">
+        <div class="user-avatar">U</div>
+        <div class="user-details"><strong>User</strong><span>Member</span></div>
+      </div>
+      <button type="button" class="nav-link sidebar-logout-button" id="logoutButton"><span class="nav-icon">↪</span> Logout</button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <main class="app-main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Open navigation">☰</button>
+        <div class="topbar-search"><span class="search-icon">⌕</span><input type="search" placeholder="Search customer, payment or reference..."></div>
+      </div>
+    </header>
+    <div class="page-content" id="settingsRoot">
+      <div class="module-header">
+        <div><h1>Settings</h1><p>Manage your profile, organisation workspace and PayTrack appearance.</p></div>
+      </div>
+
+      <div class="settings-grid">
+        <div class="settings-tabs" aria-label="Settings sections">
+          <button type="button" class="settings-tab active" data-settings-tab="profile">Profile</button>
+          <button type="button" class="settings-tab" data-settings-tab="branding">Organisation & Branding</button>
+          <button type="button" class="settings-tab" data-settings-tab="access">Access & Security</button>
+          <button type="button" class="settings-tab" data-settings-tab="data">Data & Backup</button>
+        </div>
+
+        <div>
+          <section class="settings-panel active" id="settingsPanel-profile">
+            <form class="settings-card" id="settingsProfileForm">
+              <h2>Profile</h2>
+              <p>Your personal account information.</p>
+              <div class="settings-form-grid">
+                <div class="settings-field full"><label for="settingsFullName">Full name</label><input id="settingsFullName" type="text" required></div>
+                <div class="settings-field full"><label for="settingsEmail">Email address</label><input id="settingsEmail" type="email" disabled></div>
+              </div>
+              <div class="settings-actions"><button type="submit" class="primary-button">Save Profile</button></div>
+              <div class="settings-success" id="settingsProfileMessage"></div>
+            </form>
+          </section>
+
+          <section class="settings-panel" id="settingsPanel-branding">
+            <form class="settings-card" id="settingsBrandForm">
+              <h2>Organisation & Branding</h2>
+              <p>This identity appears throughout the workspace for the signed-in organisation.</p>
+              <div class="settings-form-grid">
+                <div class="settings-field"><label for="settingsWorkspaceName">Workspace name</label><input id="settingsWorkspaceName" type="text" required></div>
+                <div class="settings-field"><label for="settingsWorkspaceCode">Organisation code</label><input id="settingsWorkspaceCode" type="text" placeholder="AS5"></div>
+                <div class="settings-field"><label for="settingsBrandColor">Brand colour</label><input id="settingsBrandColor" type="color" value="#2563eb" style="height:44px;padding:5px;"></div>
+                <div class="settings-field"><label for="settingsBrandHex">Brand hex</label><input id="settingsBrandHex" type="text" value="#2563eb" maxlength="7"></div>
+                <div class="settings-field full"><label for="settingsLogoUpload">Organisation logo</label><input id="settingsLogoUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small style="color:#667085;">Upload a square or horizontal logo. It will appear in the sidebar and branded receipts.</small></div>
+              </div>
+              <div class="brand-preview"><div class="brand-preview-swatch" id="settingsLogoPreviewWrap"><img id="settingsLogoPreview" alt="Organisation logo preview" hidden></div><div><strong>Workspace preview</strong><div style="font-size:12px;color:#667085;margin-top:3px;">Buttons, active navigation, logo and receipts use your organisation branding.</div></div></div>
+              <div class="settings-actions"><button type="button" class="secondary-button" id="resetBrandButton">Use PayTrack Blue</button><button type="submit" class="primary-button">Save Branding</button></div>
+              <div class="settings-success" id="settingsBrandMessage"></div>
+            </form>
+          </section>
+
+          <section class="settings-panel" id="settingsPanel-access">
+            <div class="settings-card">
+              <h2>Access & Security</h2>
+              <p>Your account is protected by Supabase Authentication and organisation-level Row Level Security.</p>
+              <div class="request-info-list">
+                <div class="info-row"><span>Authentication</span><strong>Enabled</strong></div>
+                <div class="info-row"><span>Organisation isolation</span><strong>RLS enabled</strong></div>
+                <div class="info-row"><span>Session protection</span><strong>Signed-in users only</strong></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-panel" id="settingsPanel-data">
+            <div class="settings-card">
+              <h2>Data & Backup</h2>
+              <p>PayTrack SME stores operational records in Supabase PostgreSQL. Financial records are retained rather than hard-deleted.</p>
+              <div class="request-info-list">
+                <div class="info-row"><span>Database</span><strong>Supabase PostgreSQL</strong></div>
+                <div class="info-row"><span>Financial record deletion</span><strong>Restricted</strong></div>
+                <div class="info-row"><span>Report export</span><strong>CSV / PDF download</strong></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/app.js"></script>
 </body>
 </html>

@@ -1,1 +1,445 @@
-/* Responsive styles will be added step by step. */
+/* ==================================================
+   RESPONSIVE FOUNDATION
+================================================== */
+
+/*
+  BREAKPOINT STRATEGY
+
+  > 1400px  = large desktop
+  1101–1400 = laptop / smaller desktop
+  769–1100  = tablet / compact layout
+  <= 768px  = mobile
+*/
+
+
+/* ==================================================
+   LARGE / NORMAL DESKTOP
+================================================== */
+
+@media (max-width: 1400px) {
+
+  .page-content {
+    padding: 28px;
+  }
+
+  /*
+    Do not force five metric cards when there is
+    not enough usable content width.
+  */
+
+  .metric-grid {
+    grid-template-columns:
+      repeat(auto-fit, minmax(210px, 1fr));
+  }
+
+  .metric-value {
+    font-size: 20px;
+  }
+
+}
+
+
+/* ==================================================
+   SMALL LAPTOP
+================================================== */
+
+@media (max-width: 1200px) {
+
+  /*
+    The sidebar becomes slightly narrower before
+    completely disappearing.
+  */
+
+  :root {
+    --sidebar-width: 220px;
+  }
+
+  .sidebar {
+    width: var(--sidebar-width);
+  }
+
+  .app-main {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+  }
+
+  .page-content {
+    padding: 24px;
+  }
+
+  .topbar {
+    padding: 0 24px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .metric-grid {
+    grid-template-columns:
+      repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .attention-card {
+    min-height: auto;
+  }
+
+}
+
+
+/* ==================================================
+   TABLET / COMPACT APP
+================================================== */
+
+@media (max-width: 1100px) {
+
+  /*
+    At this width the persistent sidebar takes too
+    much room, so switch to mobile navigation.
+  */
+
+  .sidebar {
+    position: fixed;
+
+    width: 280px;
+
+    transform: translateX(-100%);
+
+    transition: transform 0.25s ease;
+
+    box-shadow:
+      12px 0 30px rgba(16, 24, 40, 0.12);
+
+    z-index: 1000;
+  }
+
+  body.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .app-main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .topbar {
+    padding: 0 20px;
+  }
+
+  /*
+    Show hamburger button.
+  */
+
+  .mobile-menu-button {
+    display: grid;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    flex: 1;
+  }
+
+  .topbar-search {
+    width: min(100%, 460px);
+  }
+
+  .page-content {
+    padding: 24px 20px;
+  }
+
+  .metric-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* ==================================================
+   MEDIUM TABLET
+================================================== */
+
+@media (max-width: 850px) {
+
+  .metric-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-actions {
+    display: grid;
+
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  /*
+    Tables should keep their structure instead
+    of squeezing every column.
+  */
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table {
+    min-width: 760px;
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 768px) {
+
+  :root {
+    --header-height: 60px;
+  }
+
+  .topbar {
+    height: var(--header-height);
+
+    padding: 0 16px;
+
+    gap: 12px;
+  }
+
+  .topbar-left {
+    min-width: 0;
+  }
+
+  .topbar-search {
+    width: 100%;
+  }
+
+  .topbar-search input {
+    height: 38px;
+
+    font-size: 13px;
+  }
+
+  .page-content {
+    padding: 20px 16px;
+  }
+
+  .dashboard-header {
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .dashboard-header p {
+    font-size: 13px;
+  }
+
+  /*
+    Actions wrap into two columns.
+  */
+
+  .dashboard-actions {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .dashboard-actions .primary-button {
+    grid-column: 1 / -1;
+  }
+
+  .metric-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+  }
+
+  .metric-card {
+    padding: 15px;
+  }
+
+  .metric-value {
+    font-size: 19px;
+
+    white-space: nowrap;
+  }
+
+  .dashboard-grid {
+    gap: 14px;
+  }
+
+  .collections-card,
+  .attention-card,
+  .recent-section {
+    padding: 16px;
+  }
+
+  .section-header {
+    margin-bottom: 16px;
+  }
+
+  .chart-area {
+    height: 180px;
+  }
+
+  .bar-chart {
+    height: 155px;
+    gap: 7px;
+  }
+
+  .chart-bar {
+    width: 75%;
+  }
+
+  .recent-section {
+    overflow: hidden;
+  }
+
+}
+
+
+/* ==================================================
+   SMALL MOBILE
+================================================== */
+
+@media (max-width: 520px) {
+
+  /*
+    Mobile search becomes more compact.
+  */
+
+  .topbar-search input {
+    padding-right: 10px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 22px;
+  }
+
+  .dashboard-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-actions .primary-button {
+    grid-column: auto;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-card {
+    min-height: 120px;
+  }
+
+  .metric-value {
+    font-size: 22px;
+  }
+
+  .section-header {
+    align-items: center;
+  }
+
+  .collections-card .section-header {
+    align-items: flex-start;
+  }
+
+  .small-select {
+    max-width: 120px;
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE NAVIGATION COMPONENTS
+================================================== */
+
+.mobile-menu-button {
+  width: 38px;
+  height: 38px;
+
+  display: none;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-sm);
+
+  background: var(--surface);
+
+  color: var(--text-primary);
+
+  font-size: 20px;
+}
+
+
+/* Dark background behind opened mobile sidebar */
+
+.sidebar-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(17, 24, 39, 0.35);
+
+  backdrop-filter: blur(2px);
+
+  z-index: 900;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+
+body.sidebar-open .sidebar-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 1100px) {
+
+  .mobile-menu-button {
+    display: grid;
+  }
+
+}

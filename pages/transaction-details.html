@@ -3,15 +3,823 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transaction Details | PayTrack SME</title>
+
+  <title>TXN-2026-00451 | PayTrack SME</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-  <main><h1>Transaction Details</h1></main>
-  <script src="../js/utils.js"></script>
-  <script src="../js/supabase.js"></script>
-  <script src="../js/app.js"></script>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+
+      <div class="brand">
+        <div class="brand-mark">PT</div>
+        <span>PayTrack SME</span>
+      </div>
+
+      <select class="organization-select" id="organisationSelect"><option>Loading...</option></select>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">⌂</span>
+        Overview
+      </a>
+
+      <a href="customers.html" class="nav-link">
+        <span class="nav-icon">◎</span>
+        Customers
+      </a>
+
+      <a href="payment-requests.html" class="nav-link">
+        <span class="nav-icon">▤</span>
+        Payment Requests
+      </a>
+
+      <a href="transactions.html" class="nav-link active">
+        <span class="nav-icon">⇄</span>
+        Transactions
+      </a>
+
+      <a href="reconciliation.html" class="nav-link">
+        <span class="nav-icon">✓</span>
+        Reconciliation
+      </a>
+
+      <a href="reports.html" class="nav-link">
+        <span class="nav-icon">◫</span>
+        Reports
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <a href="settings.html" class="nav-link">
+        <span class="nav-icon">⚙</span>
+        Settings
+      </a>
+
+      <a href="#" class="nav-link">
+        <span class="nav-icon">?</span>
+        Help
+      </a>
+
+      <div class="user-card">
+
+        <div class="user-avatar">
+          AG
+        </div>
+
+        <div class="user-details">
+          <strong>Ayobami Gegeoju</strong>
+          <span>Administrator</span>
+        </div>
+
+        <button class="profile-menu-btn">
+          •••
+        </button>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+  ></div>
+
+
+  <main class="app-main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button
+          class="mobile-menu-button"
+          id="mobileMenuButton"
+          aria-label="Open navigation"
+        >
+          ☰
+        </button>
+
+        <div class="topbar-search">
+
+          <span class="search-icon">
+            ⌕
+          </span>
+
+          <input
+            type="search"
+            placeholder="Search customer, payment or reference..."
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="topbar-actions">
+
+        <button class="icon-button notification-button">
+          ♧
+          <span class="notification-dot"></span>
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div class="page-content">
+
+      <div class="detail-breadcrumb">
+
+        <a href="transactions.html">
+          Transactions
+        </a>
+
+        <span>›</span>
+
+        <span id="transactionBreadcrumbNumber">Loading...</span>
+
+      </div>
+
+
+      <div class="transaction-detail-header">
+
+        <div>
+
+          <div class="transaction-detail-title-row">
+
+            <h1 id="transactionDetailNumber">Loading...</h1>
+
+            <span
+              class="status-chip status-warning"
+              id="transactionReconciliationStatus"
+            >
+              Needs Review
+            </span>
+
+          </div>
+
+          <p id="transactionDetailSubtitle">Loading...</p>
+
+        </div>
+
+
+        <div class="transaction-detail-actions">
+
+          <button
+            class="secondary-button"
+            id="viewReceiptButton"
+          >
+            View Receipt
+          </button>
+
+          <button
+            class="primary-button"
+            id="reconcileTransactionButton"
+          >
+            Reconcile
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <section class="transaction-detail-summary-grid">
+
+        <div class="transaction-detail-summary-card">
+
+          <span>
+            Amount
+          </span>
+
+          <strong class="summary-paid" id="transactionAmount">₦0</strong>
+
+          <small>
+            Recorded payment
+          </small>
+
+        </div>
+
+
+        <div class="transaction-detail-summary-card">
+
+          <span>
+            Payment Method
+          </span>
+
+          <strong class="text-value" id="transactionMethod">—</strong>
+
+          <small>
+            External payment channel
+          </small>
+
+        </div>
+
+
+        <div class="transaction-detail-summary-card">
+
+          <span>
+            Payment Date
+          </span>
+
+          <strong class="text-value" id="transactionDate">—</strong>
+
+          <small>
+            Date payment occurred
+          </small>
+
+        </div>
+
+
+        <div class="transaction-detail-summary-card">
+
+          <span>
+            Reconciliation
+          </span>
+
+          <strong
+            class="text-value status-text-warning"
+            id="transactionReconciliationSummary"
+          >
+            Needs Review
+          </strong>
+
+          <small>
+            Awaiting confirmation
+          </small>
+
+        </div>
+
+      </section>
+
+
+      <section class="transaction-detail-layout">
+
+        <div class="transaction-detail-main">
+
+          <div class="transaction-detail-card">
+
+            <div class="section-header">
+
+              <div>
+                <h2>Payment Information</h2>
+                <p>Details recorded for this transaction</p>
+              </div>
+
+            </div>
+
+
+            <div class="transaction-info-grid">
+
+              <div class="transaction-info-item">
+                <span>Transaction ID</span>
+                <strong id="transactionInfoId">—</strong>
+              </div>
+
+              <div class="transaction-info-item">
+                <span>Amount</span>
+                <strong id="transactionInfoAmount">—</strong>
+              </div>
+
+              <div class="transaction-info-item">
+                <span>Payment Method</span>
+                <strong id="transactionInfoMethod">—</strong>
+              </div>
+
+              <div class="transaction-info-item">
+                <span>Payment Date</span>
+                <strong id="transactionInfoDate">—</strong>
+              </div>
+
+              <div class="transaction-info-item">
+                <span>External Reference</span>
+                <strong id="transactionInfoExternalReference">—</strong>
+              </div>
+
+              <div class="transaction-info-item">
+                <span>Recorded On</span>
+                <strong id="transactionInfoRecordedOn">—</strong>
+              </div>
+
+              <div class="transaction-info-item">
+                <span>Recorded By</span>
+                <strong>Ayobami Gegeoju</strong>
+              </div>
+
+              <div class="transaction-info-item">
+                <span>Reconciliation Status</span>
+
+                <div>
+                  <span
+                    class="status-chip status-warning"
+                    id="transactionInfoReconciliationStatus"
+                  >
+                    Needs Review
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="transaction-detail-card">
+
+            <div class="section-header">
+
+              <div>
+                <h2>Linked Records</h2>
+                <p>Customer and payment request connected to this payment</p>
+              </div>
+
+            </div>
+
+
+            <div class="linked-records-grid">
+
+              <a
+                href="#"
+                class="linked-record-card" id="linkedCustomerCard"
+              >
+
+                <div class="linked-record-icon">
+                  ◎
+                </div>
+
+                <div>
+
+                  <span>
+                    Customer
+                  </span>
+
+                  <strong id="linkedCustomerName">—</strong>
+
+                  <small id="linkedCustomerCode">—</small>
+
+                </div>
+
+                <span class="linked-record-arrow">
+                  →
+                </span>
+
+              </a>
+
+
+              <a
+                href="#"
+                class="linked-record-card" id="linkedRequestCard"
+              >
+
+                <div class="linked-record-icon">
+                  ▤
+                </div>
+
+                <div>
+
+                  <span>
+                    Payment Request
+                  </span>
+
+                  <strong id="linkedRequestNumber">—</strong>
+
+                  <small id="linkedRequestPurpose">—</small>
+
+                </div>
+
+                <span class="linked-record-arrow">
+                  →
+                </span>
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <div class="transaction-detail-card">
+
+            <div class="section-header">
+
+              <div>
+                <h2>Notes</h2>
+                <p>Additional information recorded with this payment</p>
+              </div>
+
+            </div>
+
+
+            <div class="request-note-content">
+
+              <p id="transactionNotes">—</p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <aside class="transaction-side-card">
+
+          <div class="section-header">
+
+            <div>
+              <h2>Reconciliation</h2>
+            </div>
+
+          </div>
+
+
+          <div
+            class="reconciliation-status-block"
+            id="transactionReconciliationBlock"
+          >
+
+            <div
+              class="reconciliation-status-icon"
+              id="transactionReconciliationIcon"
+            >
+              !
+            </div>
+
+            <div>
+
+              <strong id="transactionReconciliationBlockTitle">
+                Needs Review
+              </strong>
+
+              <p id="transactionReconciliationBlockText">
+                This payment has been recorded but has not yet been
+                marked as reconciled.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="transaction-side-info">
+
+            <div class="info-row">
+
+              <span>
+                Payment Reference
+              </span>
+
+              <strong id="transactionSideReference">—</strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Customer
+              </span>
+
+              <a
+                href="#" class="info-link" id="transactionSideCustomer">—</a>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Payment Request
+              </span>
+
+              <a
+                href="#" class="info-link" id="transactionSideRequest">—</a>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Receipt
+              </span>
+
+              <strong id="transactionSideReceipt">—</strong>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+<div
+  class="modal-backdrop"
+  id="reconciliationModalBackdrop"
+  hidden
+>
+
+  <div
+    class="modal reconciliation-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="reconciliationModalTitle"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2 id="reconciliationModalTitle">
+          Reconcile Transaction
+        </h2>
+
+        <p>
+          Confirm TXN-2026-00451 against verified external evidence.
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="modal-close-button"
+        id="closeReconciliationModal"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="reconciliationForm">
+
+      <div class="modal-body">
+
+        <div class="reconciliation-transaction-summary">
+
+          <div>
+
+            <span>
+              Transaction
+            </span>
+
+            <strong>
+              TXN-2026-00451
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Customer
+            </span>
+
+            <strong>
+              John Adeyemi
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Amount
+            </span>
+
+            <strong>
+              ₦750,000
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Payment Reference
+            </span>
+
+            <strong>
+              GTB-050926-7821
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="verificationMethod">
+              Verification Method
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="verificationMethod"
+              name="verificationMethod"
+            >
+
+              <option value="">
+                Select verification method
+              </option>
+
+              <option value="Bank Statement">
+                Bank Statement
+              </option>
+
+              <option value="Bank Alert">
+                Bank Alert
+              </option>
+
+              <option value="POS Record">
+                POS Record
+              </option>
+
+              <option value="Cash Record">
+                Cash Record
+              </option>
+
+              <option value="Other Verified Evidence">
+                Other Verified Evidence
+              </option>
+
+            </select>
+
+            <small
+              class="form-error"
+              id="verificationMethodError"
+            ></small>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="verificationDate">
+              Verification Date
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="date"
+              id="verificationDate"
+              name="verificationDate"
+            >
+
+            <small
+              class="form-error"
+              id="verificationDateError"
+            ></small>
+
+          </div>
+
+
+          <div class="form-group form-group-full">
+
+            <label for="verificationReference">
+              Verification Reference
+            </label>
+
+            <input
+              type="text"
+              id="verificationReference"
+              name="verificationReference"
+              placeholder="Optional statement, alert or record reference"
+            >
+
+          </div>
+
+
+          <div class="form-group form-group-full">
+
+            <label for="reconciliationNotes">
+              Reconciliation Notes
+            </label>
+
+            <textarea
+              id="reconciliationNotes"
+              name="reconciliationNotes"
+              rows="4"
+              placeholder="Add any notes about the verification..."
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <div class="request-form-note">
+
+          <div>i</div>
+
+          <p>
+            Reconciliation confirms that the payment record in PayTrack SME
+            matches verified external evidence. It does not process or settle
+            the payment.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="secondary-button"
+          id="cancelReconciliationModal"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="primary-button"
+        >
+          Confirm Reconciliation
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="reconciliationToast"
+  hidden
+>
+
+  <div class="toast-icon">
+    ✓
+  </div>
+
+  <div>
+
+    <strong>
+      Transaction reconciled
+    </strong>
+
+    <span>
+      TXN-2026-00451 has been marked as reconciled.
+    </span>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/utils.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/app.js"></script>
+
 </body>
 </html>

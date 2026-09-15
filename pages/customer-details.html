@@ -2,16 +2,887 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Details | PayTrack SME</title>
-  <link rel="stylesheet" href="../css/global.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/responsive.css">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Customer Details | PayTrack SME
+  </title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="../css/global.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="../css/components.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="../css/responsive.css"
+  >
 </head>
+
 <body>
-  <main><h1>Customer Details</h1></main>
-  <script src="../js/utils.js"></script>
-  <script src="../js/supabase.js"></script>
-  <script src="../js/app.js"></script>
+
+<div class="app-shell">
+
+  <!-- ============================================
+       SIDEBAR
+  ============================================= -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+
+      <div class="brand">
+
+        <div class="brand-mark">
+          PT
+        </div>
+
+        <span>
+          PayTrack SME
+        </span>
+
+      </div>
+
+
+      <select
+        class="organization-select"
+        id="organisationSelect"
+      >
+        <option>
+          Loading...
+        </option>
+      </select>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a
+        href="dashboard.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">
+          ⌂
+        </span>
+
+        Overview
+      </a>
+
+
+      <a
+        href="customers.html"
+        class="nav-link active"
+      >
+        <span class="nav-icon">
+          ◎
+        </span>
+
+        Customers
+      </a>
+
+
+      <a
+        href="payment-requests.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">
+          ▤
+        </span>
+
+        Payment Requests
+      </a>
+
+
+      <a
+        href="transactions.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">
+          ⇄
+        </span>
+
+        Transactions
+      </a>
+
+
+      <a
+        href="reconciliation.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">
+          ✓
+        </span>
+
+        Reconciliation
+      </a>
+
+
+      <a
+        href="reports.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">
+          ◫
+        </span>
+
+        Reports
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <a
+        href="settings.html"
+        class="nav-link"
+      >
+        <span class="nav-icon">
+          ⚙
+        </span>
+
+        Settings
+      </a>
+
+
+      <div class="user-card">
+
+        <div class="user-avatar">
+          AG
+        </div>
+
+        <div class="user-details">
+
+          <strong>
+            Ayobami Gegeoju
+          </strong>
+
+          <span>
+            Administrator
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="nav-link logout-button"
+        id="logoutButton"
+      >
+        <span class="nav-icon">
+          ↪
+        </span>
+
+        Sign Out
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+  ></div>
+
+
+  <!-- ============================================
+       MAIN
+  ============================================= -->
+
+  <main class="app-main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button
+          class="mobile-menu-button"
+          id="mobileMenuButton"
+        >
+          ☰
+        </button>
+
+        <div class="topbar-search">
+
+          <span class="search-icon">
+            ⌕
+          </span>
+
+          <input
+            type="search"
+            placeholder="Search..."
+          >
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <div class="page-content">
+
+      <!-- ============================================
+           LOADING
+      ============================================= -->
+
+      <div
+        class="data-loading-state"
+        id="customerDetailsLoading"
+      >
+        Loading customer details...
+      </div>
+
+
+      <!-- ============================================
+           ERROR
+      ============================================= -->
+
+      <div
+        class="table-empty-state"
+        id="customerDetailsError"
+        hidden
+      >
+
+        <div class="empty-icon">
+          !
+        </div>
+
+        <strong>
+          Customer could not be loaded
+        </strong>
+
+        <p id="customerDetailsErrorText">
+          Please return to the Customers page.
+        </p>
+
+        <a
+          href="customers.html"
+          class="primary-button"
+        >
+          Back to Customers
+        </a>
+
+      </div>
+
+
+      <!-- ============================================
+           CUSTOMER CONTENT
+      ============================================= -->
+
+      <div
+        id="customerDetailsContent"
+        hidden
+      >
+
+        <div class="detail-breadcrumb">
+
+          <a href="customers.html">
+            Customers
+          </a>
+
+          <span>
+            /
+          </span>
+
+          <span id="customerBreadcrumbName">
+            Customer
+          </span>
+
+        </div>
+
+
+        <section class="detail-header">
+
+          <div class="detail-customer-profile">
+
+            <div
+              class="customer-avatar customer-detail-avatar"
+              id="customerDetailAvatar"
+            >
+              --
+            </div>
+
+
+            <div>
+
+              <div class="detail-title-row">
+
+                <h1 id="customerDetailName">
+                  Customer
+                </h1>
+
+                <span
+                  class="status-chip status-success"
+                  id="customerDetailStatus"
+                >
+                  Active
+                </span>
+
+              </div>
+
+
+              <p id="customerDetailMeta">
+                —
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="detail-header-actions">
+
+            <a
+              href="payment-requests.html"
+              class="secondary-button"
+            >
+              View Payment Requests
+            </a>
+
+          </div>
+
+        </section>
+
+
+        <!-- ============================================
+             SUMMARY
+        ============================================= -->
+
+        <section class="detail-summary-grid">
+
+          <article class="metric-card">
+
+            <span class="metric-label">
+              Total Amount Due
+            </span>
+
+            <strong
+              class="metric-value"
+              id="customerTotalDue"
+            >
+              ₦0
+            </strong>
+
+          </article>
+
+
+          <article class="metric-card">
+
+            <span class="metric-label">
+              Total Paid
+            </span>
+
+            <strong
+              class="metric-value paid-value"
+              id="customerTotalPaid"
+            >
+              ₦0
+            </strong>
+
+          </article>
+
+
+          <article class="metric-card">
+
+            <span class="metric-label">
+              Outstanding
+            </span>
+
+            <strong
+              class="metric-value"
+              id="customerOutstanding"
+            >
+              ₦0
+            </strong>
+
+          </article>
+
+
+          <article class="metric-card">
+
+            <span class="metric-label">
+              Active Requests
+            </span>
+
+            <strong
+              class="metric-value"
+              id="customerActiveRequests"
+            >
+              0
+            </strong>
+
+          </article>
+
+        </section>
+
+
+        <!-- ============================================
+             TABS
+        ============================================= -->
+
+        <div class="detail-tabs">
+
+          <button
+            class="detail-tab active"
+            data-tab="overview"
+          >
+            Overview
+          </button>
+
+          <button
+            class="detail-tab"
+            data-tab="requests"
+          >
+            Payment Requests
+          </button>
+
+          <button
+            class="detail-tab"
+            data-tab="payments"
+          >
+            Payment History
+          </button>
+
+          <button
+            class="detail-tab"
+            data-tab="receipts"
+          >
+            Receipts
+          </button>
+
+        </div>
+
+
+        <!-- ============================================
+             OVERVIEW
+        ============================================= -->
+
+        <section
+          class="detail-tab-panel active"
+          data-panel="overview"
+        >
+
+          <div class="detail-layout">
+
+            <div class="detail-main-column">
+
+              <section class="module-card">
+
+                <div class="card-header">
+
+                  <div>
+
+                    <h2>
+                      Recent Payment Requests
+                    </h2>
+
+                    <p>
+                      Latest payment obligations for this customer.
+                    </p>
+
+                  </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                  <table class="data-table">
+
+                    <thead>
+
+                      <tr>
+                        <th>Request</th>
+                        <th>Purpose</th>
+                        <th>Amount Due</th>
+                        <th>Paid</th>
+                        <th>Outstanding</th>
+                        <th>Status</th>
+                      </tr>
+
+                    </thead>
+
+
+                    <tbody id="customerOverviewRequestsBody">
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+
+                <div
+                  class="table-empty-state"
+                  id="customerOverviewRequestsEmpty"
+                  hidden
+                >
+
+                  <strong>
+                    No payment requests yet
+                  </strong>
+
+                  <p>
+                    This customer does not have any payment requests.
+                  </p>
+
+                </div>
+
+              </section>
+
+            </div>
+
+
+            <aside class="detail-side-column">
+
+              <section class="module-card">
+
+                <div class="card-header">
+
+                  <div>
+
+                    <h2>
+                      Customer Information
+                    </h2>
+
+                  </div>
+
+                </div>
+
+
+                <div class="info-list">
+
+                  <div class="info-row">
+
+                    <span>
+                      Customer ID
+                    </span>
+
+                    <strong id="customerInfoCode">
+                      —
+                    </strong>
+
+                  </div>
+
+
+                  <div class="info-row">
+
+                    <span>
+                      Customer Type
+                    </span>
+
+                    <strong id="customerInfoType">
+                      —
+                    </strong>
+
+                  </div>
+
+
+                  <div class="info-row">
+
+                    <span>
+                      Email
+                    </span>
+
+                    <strong id="customerInfoEmail">
+                      —
+                    </strong>
+
+                  </div>
+
+
+                  <div class="info-row">
+
+                    <span>
+                      Phone
+                    </span>
+
+                    <strong id="customerInfoPhone">
+                      —
+                    </strong>
+
+                  </div>
+
+
+                  <div class="info-row">
+
+                    <span>
+                      Identifier
+                    </span>
+
+                    <strong id="customerInfoIdentifier">
+                      —
+                    </strong>
+
+                  </div>
+
+
+                  <div class="info-row">
+
+                    <span>
+                      Address
+                    </span>
+
+                    <strong id="customerInfoAddress">
+                      —
+                    </strong>
+
+                  </div>
+
+                </div>
+
+              </section>
+
+
+              <section class="module-card">
+
+                <div class="card-header">
+
+                  <div>
+
+                    <h2>
+                      Notes
+                    </h2>
+
+                  </div>
+
+                </div>
+
+                <p
+                  class="detail-notes"
+                  id="customerInfoNotes"
+                >
+                  No notes added.
+                </p>
+
+              </section>
+
+            </aside>
+
+          </div>
+
+        </section>
+
+
+        <!-- ============================================
+             PAYMENT REQUESTS TAB
+        ============================================= -->
+
+        <section
+          class="detail-tab-panel"
+          data-panel="requests"
+        >
+
+          <section class="module-card">
+
+            <div class="table-wrapper">
+
+              <table class="data-table">
+
+                <thead>
+
+                  <tr>
+                    <th>Request</th>
+                    <th>Business Reference</th>
+                    <th>Purpose</th>
+                    <th>Amount Due</th>
+                    <th>Paid</th>
+                    <th>Outstanding</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                  </tr>
+
+                </thead>
+
+
+                <tbody id="customerRequestsBody">
+                </tbody>
+
+              </table>
+
+            </div>
+
+
+            <div
+              class="table-empty-state"
+              id="customerRequestsEmpty"
+              hidden
+            >
+
+              <strong>
+                No payment requests
+              </strong>
+
+              <p>
+                No payment requests have been created for this customer.
+              </p>
+
+            </div>
+
+          </section>
+
+        </section>
+
+
+        <!-- ============================================
+             PAYMENT HISTORY TAB
+        ============================================= -->
+
+        <section
+          class="detail-tab-panel"
+          data-panel="payments"
+        >
+
+          <section class="module-card">
+
+            <div class="table-wrapper">
+
+              <table class="data-table">
+
+                <thead>
+
+                  <tr>
+                    <th>Transaction</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Reference</th>
+                    <th>Reconciliation</th>
+                  </tr>
+
+                </thead>
+
+
+                <tbody id="customerPaymentsBody">
+                </tbody>
+
+              </table>
+
+            </div>
+
+
+            <div
+              class="table-empty-state"
+              id="customerPaymentsEmpty"
+              hidden
+            >
+
+              <strong>
+                No payments recorded
+              </strong>
+
+              <p>
+                No payments have been recorded for this customer.
+              </p>
+
+            </div>
+
+          </section>
+
+        </section>
+
+
+        <!-- ============================================
+             RECEIPTS TAB
+        ============================================= -->
+
+        <section
+          class="detail-tab-panel"
+          data-panel="receipts"
+        >
+
+          <section class="module-card">
+
+            <div class="table-wrapper">
+
+              <table class="data-table">
+
+                <thead>
+
+                  <tr>
+                    <th>Receipt</th>
+                    <th>Transaction</th>
+                    <th>Amount</th>
+                    <th>Payment Date</th>
+                    <th>Generated</th>
+                  </tr>
+
+                </thead>
+
+
+                <tbody id="customerReceiptsBody">
+                </tbody>
+
+              </table>
+
+            </div>
+
+
+            <div
+              class="table-empty-state"
+              id="customerReceiptsEmpty"
+              hidden
+            >
+
+              <strong>
+                No receipts available
+              </strong>
+
+              <p>
+                No receipts have been generated for this customer.
+              </p>
+
+            </div>
+
+          </section>
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script src="../js/utils.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/app.js"></script>
+
 </body>
 </html>

@@ -3,15 +3,792 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Request Details | PayTrack SME</title>
+
+  <title>PAY-2026-00128 | PayTrack SME</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-  <main><h1>Payment Request Details</h1></main>
-  <script src="../js/utils.js"></script>
-  <script src="../js/supabase.js"></script>
-  <script src="../js/app.js"></script>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+
+      <div class="brand">
+        <div class="brand-mark">PT</div>
+        <span>PayTrack SME</span>
+      </div>
+
+      <select class="organization-select" id="organisationSelect"><option>Loading...</option></select>
+
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">⌂</span>
+        Overview
+      </a>
+
+      <a href="customers.html" class="nav-link">
+        <span class="nav-icon">◎</span>
+        Customers
+      </a>
+
+      <a href="payment-requests.html" class="nav-link active">
+        <span class="nav-icon">▤</span>
+        Payment Requests
+      </a>
+
+      <a href="transactions.html" class="nav-link">
+        <span class="nav-icon">⇄</span>
+        Transactions
+      </a>
+
+      <a href="reconciliation.html" class="nav-link">
+        <span class="nav-icon">✓</span>
+        Reconciliation
+      </a>
+
+      <a href="reports.html" class="nav-link">
+        <span class="nav-icon">◫</span>
+        Reports
+      </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <a href="settings.html" class="nav-link">
+        <span class="nav-icon">⚙</span>
+        Settings
+      </a>
+
+      <a href="#" class="nav-link">
+        <span class="nav-icon">?</span>
+        Help
+      </a>
+
+      <div class="user-card">
+
+        <div class="user-avatar">
+          AG
+        </div>
+
+        <div class="user-details">
+          <strong>Ayobami Gegeoju</strong>
+          <span>Administrator</span>
+        </div>
+
+        <button class="profile-menu-btn">
+          •••
+        </button>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+  ></div>
+
+
+  <main class="app-main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button
+          class="mobile-menu-button"
+          id="mobileMenuButton"
+          aria-label="Open navigation"
+        >
+          ☰
+        </button>
+
+        <div class="topbar-search">
+
+          <span class="search-icon">
+            ⌕
+          </span>
+
+          <input
+            type="search"
+            placeholder="Search customer, payment or reference..."
+          >
+
+        </div>
+
+      </div>
+
+      <div class="topbar-actions">
+
+        <button class="icon-button notification-button">
+          ♧
+          <span class="notification-dot"></span>
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div class="page-content">
+
+      <div class="detail-breadcrumb">
+
+        <a href="payment-requests.html">
+          Payment Requests
+        </a>
+
+        <span>›</span>
+
+        <span id="requestBreadcrumbNumber">Loading...</span>
+
+      </div>
+
+
+      <div class="request-detail-header">
+
+        <div>
+
+          <div class="request-detail-title-row">
+
+            <h1 id="requestDetailNumber">Loading...</h1>
+
+            <span class="status-chip status-pending" id="requestStatus">Loading...</span>
+
+          </div>
+
+          <p id="requestDetailPurpose">Loading...</p>
+
+        </div>
+
+
+        <div class="request-detail-actions">
+
+          <button
+            class="secondary-button"
+            id="editPaymentRequestButton"
+          >
+            Edit Request
+          </button>
+
+          <button
+            class="primary-button"
+            id="recordPaymentButton"
+          >
+            + Record Payment
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <section class="request-financial-grid">
+
+        <div class="request-financial-card">
+
+          <span>
+            Amount Due
+          </span>
+
+          <strong id="requestAmountDue">
+            ₦2,000,000
+          </strong>
+
+          <small>
+            Original obligation
+          </small>
+
+        </div>
+
+
+        <div class="request-financial-card">
+
+          <span>
+            Total Paid
+          </span>
+
+          <strong
+            class="summary-paid"
+            id="requestTotalPaid"
+          >
+            ₦750,000
+          </strong>
+
+          <small>
+            1 confirmed payment
+          </small>
+
+        </div>
+
+
+        <div class="request-financial-card">
+
+          <span>
+            Outstanding
+          </span>
+
+          <strong id="requestOutstanding">
+            ₦1,250,000
+          </strong>
+
+          <small>
+            Remaining balance
+          </small>
+
+        </div>
+
+
+        <div class="request-financial-card">
+
+          <span>
+            Due Date
+          </span>
+
+          <strong class="date-value" id="requestDueDate">—</strong>
+
+          <small>
+            19 days remaining
+          </small>
+
+        </div>
+
+      </section>
+
+
+      <section class="request-detail-layout">
+
+        <div class="request-detail-main">
+
+          <div class="request-detail-card">
+
+            <div class="section-header">
+
+              <div>
+                <h2>Payment Progress</h2>
+                <p>Current settlement progress</p>
+              </div>
+
+              <strong
+                class="request-progress-percentage"
+                id="requestProgressPercentage"
+              >
+                37.5%
+              </strong>
+
+            </div>
+
+
+            <div class="large-progress-track">
+
+              <div
+                class="large-progress-fill"
+                id="requestProgressFill"
+                style="width: 37.5%;"
+              ></div>
+
+            </div>
+
+
+            <div class="progress-summary-row">
+
+              <span id="requestPaidSummary">
+                ₦750,000 paid
+              </span>
+
+              <span id="requestOutstandingSummary">
+                ₦1,250,000 remaining
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="request-detail-card">
+
+            <div class="section-header">
+
+              <div>
+                <h2>Payment History</h2>
+                <p>Payments recorded against this request</p>
+              </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+              <table class="data-table request-history-table">
+
+                <thead>
+
+                  <tr>
+                    <th>Transaction</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Reference</th>
+                    <th>Reconciliation</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="requestPaymentHistoryBody">
+
+                  <tr
+                    class="clickable-row"
+                    id="requestTransactionRow"
+                  >
+
+                    <td>
+                      <strong>
+                        TXN-2026-00451
+                      </strong>
+                    </td>
+
+                    <td>
+                      05 Sep 2026
+                    </td>
+
+                    <td class="currency paid-value">
+                      ₦750,000
+                    </td>
+
+                    <td>
+                      Bank Transfer
+                    </td>
+
+                    <td>
+                      GTB-050926-7821
+                    </td>
+
+                    <td>
+
+                      <span class="status-chip status-warning">
+                        Needs Review
+                      </span>
+
+                    </td>
+
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+
+          <div class="request-detail-card">
+
+            <div class="section-header">
+
+              <div>
+                <h2>Notes</h2>
+                <p>Additional information about this request</p>
+              </div>
+
+            </div>
+
+
+            <div class="request-note-content">
+
+              <p id="requestNotes">Loading...</p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <aside class="request-info-card">
+
+          <div class="section-header">
+
+            <div>
+              <h2>Request Information</h2>
+            </div>
+
+          </div>
+
+
+          <div class="request-info-list">
+
+            <div class="info-row">
+
+              <span>
+                Customer
+              </span>
+
+              <a
+                href="#"
+                class="info-link" id="requestInfoCustomer"
+              >
+                John Adeyemi
+              </a>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Purpose
+              </span>
+
+              <strong id="requestInfoPurpose">—</strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Business Reference
+              </span>
+
+              <strong id="requestInfoBusinessReference">—</strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Reference Type
+              </span>
+
+              <strong id="requestInfoReferenceType">—</strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Created
+              </span>
+
+              <strong id="requestInfoCreated">—</strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Due Date
+              </span>
+
+              <strong id="requestInfoDueDate">—</strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <span>
+                Status
+              </span>
+
+              <div>
+                <span
+                  class="status-chip status-partial"
+                  id="requestInfoStatus"
+                >
+                  Partially Paid
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+<div
+  class="modal-backdrop"
+  id="recordPaymentModalBackdrop"
+  hidden
+>
+
+  <div
+    class="modal record-payment-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="recordPaymentModalTitle"
+  >
+
+    <div class="modal-header">
+
+      <div>
+        <h2 id="recordPaymentModalTitle">
+          Record Payment
+        </h2>
+
+        <p id="recordPaymentModalText">Record a payment.</p>
+      </div>
+
+      <button
+        type="button"
+        class="modal-close-button"
+        id="closeRecordPaymentModal"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="recordPaymentForm">
+
+      <div class="modal-body">
+
+        <div class="payment-request-context">
+
+          <div>
+            <span>Customer</span>
+            <strong id="modalCustomerName">—</strong>
+          </div>
+
+          <div>
+            <span>Outstanding</span>
+            <strong id="modalOutstandingAmount">
+              ₦1,250,000
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="paymentAmount">
+              Amount Received
+              <span class="required">*</span>
+            </label>
+
+            <div class="currency-input">
+
+              <span>₦</span>
+
+              <input
+                type="number"
+                id="paymentAmount"
+                name="paymentAmount"
+                placeholder="0"
+                min="1"
+                step="0.01"
+              >
+
+            </div>
+
+            <small
+              class="form-error"
+              id="paymentAmountError"
+            ></small>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="paymentDate">
+              Payment Date
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="date"
+              id="paymentDate"
+              name="paymentDate"
+            >
+
+            <small
+              class="form-error"
+              id="paymentDateError"
+            ></small>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="paymentMethod">
+              Payment Method
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="paymentMethod"
+              name="paymentMethod"
+            >
+
+              <option value="">
+                Select payment method
+              </option>
+
+              <option value="bank_transfer">
+                Bank Transfer
+              </option>
+
+              <option value="pos">
+                POS
+              </option>
+
+              <option value="mobile_banking">
+                Mobile Banking
+              </option>
+
+              <option value="cash">
+                Cash
+              </option>
+
+              <option value="other">
+                Other
+              </option>
+
+            </select>
+
+            <small
+              class="form-error"
+              id="paymentMethodError"
+            ></small>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="paymentExternalReference">
+              Payment Reference
+            </label>
+
+            <input
+              type="text"
+              id="paymentExternalReference"
+              name="paymentExternalReference"
+              placeholder="e.g. GTB-110926-9021"
+            >
+
+          </div>
+
+
+          <div class="form-group form-group-full">
+
+            <label for="paymentNotes">
+              Notes
+            </label>
+
+            <textarea
+              id="paymentNotes"
+              name="paymentNotes"
+              rows="4"
+              placeholder="Optional payment notes..."
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <div class="request-form-note">
+
+          <div>i</div>
+
+          <p>
+            This action records a payment that has already occurred
+            through an external payment channel. PayTrack SME does not
+            initiate or settle the payment itself.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="secondary-button"
+          id="cancelRecordPaymentModal"
+        >
+          Cancel
+        </button>
+
+        <button type="submit" class="primary-button" id="saveRecordedPaymentButton">Record Payment</button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="recordPaymentToast"
+  hidden
+>
+
+  <div class="toast-icon">
+    ✓
+  </div>
+
+  <div>
+    <strong>Payment recorded</strong>
+
+    <span>
+      Balance and request status were updated.
+    </span>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/utils.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/app.js"></script>
+
 </body>
 </html>

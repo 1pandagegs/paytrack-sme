@@ -3,15 +3,710 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Payment Requests | PayTrack SME</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-  <main><h1>Payment Requests</h1></main>
-  <script src="../js/utils.js"></script>
-  <script src="../js/supabase.js"></script>
-  <script src="../js/app.js"></script>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+
+      <div class="brand">
+        <div class="brand-mark">PT</div>
+        <span>PayTrack SME</span>
+      </div>
+
+      <select
+        class="organization-select"
+        id="organisationSelect"
+      >
+        <option>Loading...</option>
+      </select>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">⌂</span>
+        Overview
+      </a>
+
+      <a href="customers.html" class="nav-link">
+        <span class="nav-icon">◎</span>
+        Customers
+      </a>
+
+      <a href="payment-requests.html" class="nav-link active">
+        <span class="nav-icon">▤</span>
+        Payment Requests
+      </a>
+
+      <a href="transactions.html" class="nav-link">
+        <span class="nav-icon">⇄</span>
+        Transactions
+      </a>
+
+      <a href="reconciliation.html" class="nav-link">
+        <span class="nav-icon">✓</span>
+        Reconciliation
+      </a>
+
+      <a href="reports.html" class="nav-link">
+        <span class="nav-icon">◫</span>
+        Reports
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <a href="settings.html" class="nav-link">
+        <span class="nav-icon">⚙</span>
+        Settings
+      </a>
+
+      <div class="user-card">
+
+        <div class="user-avatar">
+          AG
+        </div>
+
+        <div class="user-details">
+          <strong>Ayobami Gegeoju</strong>
+          <span>Administrator</span>
+        </div>
+
+      </div>
+
+      <button
+        class="nav-link logout-button"
+        id="logoutButton"
+      >
+        <span class="nav-icon">↪</span>
+        Sign Out
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+  ></div>
+
+
+  <main class="app-main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button
+          class="mobile-menu-button"
+          id="mobileMenuButton"
+        >
+          ☰
+        </button>
+
+        <div class="topbar-search">
+
+          <span class="search-icon">
+            ⌕
+          </span>
+
+          <input
+            type="search"
+            placeholder="Search customer, payment or reference..."
+          >
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <div class="page-content">
+
+      <div class="module-header">
+
+        <div>
+
+          <h1>
+            Payment Requests
+          </h1>
+
+          <p>
+            Track customer payment obligations and outstanding balances.
+          </p>
+
+        </div>
+
+
+        <button
+          class="primary-button"
+          id="createPaymentRequestButton"
+        >
+          + Create Payment Request
+        </button>
+
+      </div>
+
+
+      <section class="summary-grid">
+
+        <article class="metric-card">
+
+          <span class="metric-label">
+            Total Requests
+          </span>
+
+          <strong
+            class="metric-value"
+            id="paymentRequestTotalCount"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+        <article class="metric-card">
+
+          <span class="metric-label">
+            Pending
+          </span>
+
+          <strong
+            class="metric-value"
+            id="paymentRequestPendingCount"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+        <article class="metric-card">
+
+          <span class="metric-label">
+            Partially Paid
+          </span>
+
+          <strong
+            class="metric-value"
+            id="paymentRequestPartialCount"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+        <article class="metric-card">
+
+          <span class="metric-label">
+            Paid
+          </span>
+
+          <strong
+            class="metric-value"
+            id="paymentRequestPaidCount"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+        <article class="metric-card">
+
+          <span class="metric-label">
+            Overdue
+          </span>
+
+          <strong
+            class="metric-value"
+            id="paymentRequestOverdueCount"
+          >
+            0
+          </strong>
+
+        </article>
+
+      </section>
+
+
+      <section class="customers-toolbar">
+
+        <div class="module-search">
+
+          <span>⌕</span>
+
+          <input
+            type="search"
+            id="paymentRequestSearch"
+            placeholder="Search request, customer or reference..."
+          >
+
+        </div>
+
+
+        <select
+          class="filter-select"
+          id="paymentRequestStatusFilter"
+        >
+
+          <option value="all">
+            All statuses
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="partially_paid">
+            Partially Paid
+          </option>
+
+          <option value="paid">
+            Paid
+          </option>
+
+          <option value="overdue">
+            Overdue
+          </option>
+
+          <option value="cancelled">
+            Cancelled
+          </option>
+
+        </select>
+
+
+        <select
+          class="filter-select"
+          id="paymentRequestCustomerFilter"
+        >
+          <option value="all">
+            All customers
+          </option>
+        </select>
+
+      </section>
+
+
+      <section class="module-card">
+
+        <div
+          class="data-loading-state"
+          id="paymentRequestsLoadingState"
+        >
+          Loading payment requests...
+        </div>
+
+
+        <div
+          class="table-wrapper"
+          id="paymentRequestsTableWrapper"
+          hidden
+        >
+
+          <table
+            class="data-table"
+            id="paymentRequestsTable"
+          >
+
+            <thead>
+
+              <tr>
+                <th>Request</th>
+                <th>Customer</th>
+                <th>Business Reference</th>
+                <th>Purpose</th>
+                <th>Amount Due</th>
+                <th>Paid</th>
+                <th>Outstanding</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+
+            </thead>
+
+
+            <tbody id="paymentRequestsTableBody">
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div
+          class="table-empty-state"
+          id="paymentRequestEmptyState"
+          hidden
+        >
+
+          <div class="empty-icon">
+            ▤
+          </div>
+
+          <strong>
+            No payment requests found
+          </strong>
+
+          <p>
+            Try changing your search or filters.
+          </p>
+
+        </div>
+
+
+        <div class="table-footer">
+
+          <span id="paymentRequestCount">
+            Showing 0 payment requests
+          </span>
+
+          <div class="pagination">
+
+            <button disabled>
+              Previous
+            </button>
+
+            <button class="page-number active">
+              1
+            </button>
+
+            <button disabled>
+              Next
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- ============================================
+     CREATE PAYMENT REQUEST MODAL
+============================================= -->
+
+<div
+  class="modal-backdrop"
+  id="paymentRequestModalBackdrop"
+  hidden
+>
+
+  <div
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="paymentRequestModalTitle"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2 id="paymentRequestModalTitle">
+          Create Payment Request
+        </h2>
+
+        <p>
+          Create a payment obligation without processing the payment itself.
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="modal-close-button"
+        id="closePaymentRequestModal"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="createPaymentRequestForm">
+
+      <div class="modal-body">
+
+        <div class="form-grid">
+
+          <div class="form-group form-group-full">
+
+            <label for="requestCustomer">
+              Customer
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="requestCustomer"
+              required
+            >
+              <option value="">
+                Select customer
+              </option>
+            </select>
+
+            <div
+              class="field-error"
+              id="requestCustomerError"
+            ></div>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="businessReferenceType">
+              Business Reference Type
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="businessReferenceType"
+              required
+            >
+
+              <option value="">
+                Select type
+              </option>
+
+              <option value="Property">
+                Property
+              </option>
+
+              <option value="Project">
+                Project
+              </option>
+
+              <option value="Reservation">
+                Reservation
+              </option>
+
+              <option value="Service">
+                Service
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+
+            </select>
+
+            <div
+              class="field-error"
+              id="businessReferenceTypeError"
+            ></div>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="businessReference">
+              External Business Reference
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="businessReference"
+              placeholder="e.g. AS5-PROP-021"
+              required
+            >
+
+            <div
+              class="field-error"
+              id="businessReferenceError"
+            ></div>
+
+          </div>
+
+
+          <div class="form-group form-group-full">
+
+            <label for="requestPurpose">
+              Payment Purpose
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="requestPurpose"
+              placeholder="e.g. Reservation Deposit"
+              required
+            >
+
+            <div
+              class="field-error"
+              id="requestPurposeError"
+            ></div>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="requestAmount">
+              Amount Due
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="number"
+              id="requestAmount"
+              min="1"
+              step="0.01"
+              placeholder="0"
+              required
+            >
+
+            <div
+              class="field-error"
+              id="requestAmountError"
+            ></div>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="requestDueDate">
+              Due Date
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="date"
+              id="requestDueDate"
+              required
+            >
+
+            <div
+              class="field-error"
+              id="requestDueDateError"
+            ></div>
+
+          </div>
+
+
+          <div class="form-group form-group-full">
+
+            <label for="requestDescription">
+              Description / Notes
+            </label>
+
+            <textarea
+              id="requestDescription"
+              rows="4"
+              placeholder="Optional description..."
+            ></textarea>
+
+          </div>
+
+
+          <div
+            class="auth-error form-group-full"
+            id="paymentRequestFormError"
+            hidden
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="secondary-button"
+          id="cancelPaymentRequestModal"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="primary-button"
+          id="savePaymentRequestButton"
+        >
+          Create Request
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="paymentRequestToast"
+  hidden
+>
+
+  <div class="toast-icon">
+    ✓
+  </div>
+
+  <div>
+
+    <strong>
+      Payment request created
+    </strong>
+
+    <span>
+      The payment request has been saved successfully.
+    </span>
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/app.js"></script>
+
 </body>
 </html>

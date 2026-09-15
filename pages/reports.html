@@ -3,15 +3,667 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Reports | PayTrack SME</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-  <main><h1>Reports</h1></main>
-  <script src="../js/utils.js"></script>
-  <script src="../js/supabase.js"></script>
-  <script src="../js/app.js"></script>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+
+      <div class="brand">
+        <div class="brand-mark">PT</div>
+        <span>PayTrack SME</span>
+      </div>
+
+      <select class="organization-select" id="organisationSelect"><option>Loading...</option></select>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">⌂</span>
+        Overview
+      </a>
+
+      <a href="customers.html" class="nav-link">
+        <span class="nav-icon">◎</span>
+        Customers
+      </a>
+
+      <a href="payment-requests.html" class="nav-link">
+        <span class="nav-icon">▤</span>
+        Payment Requests
+      </a>
+
+      <a href="transactions.html" class="nav-link">
+        <span class="nav-icon">⇄</span>
+        Transactions
+      </a>
+
+      <a href="reconciliation.html" class="nav-link">
+        <span class="nav-icon">✓</span>
+        Reconciliation
+      </a>
+
+      <a href="reports.html" class="nav-link active">
+        <span class="nav-icon">◫</span>
+        Reports
+      </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <a href="settings.html" class="nav-link">
+        <span class="nav-icon">⚙</span>
+        Settings
+      </a>
+
+      <a href="#" class="nav-link">
+        <span class="nav-icon">?</span>
+        Help
+      </a>
+
+      <div class="user-card">
+
+        <div class="user-avatar">
+          AG
+        </div>
+
+        <div class="user-details">
+          <strong>Ayobami Gegeoju</strong>
+          <span>Administrator</span>
+        </div>
+
+        <button class="profile-menu-btn">
+          •••
+        </button>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+  ></div>
+
+
+  <main class="app-main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button
+          class="mobile-menu-button"
+          id="mobileMenuButton"
+          aria-label="Open navigation"
+        >
+          ☰
+        </button>
+
+        <div class="topbar-search">
+
+          <span class="search-icon">
+            ⌕
+          </span>
+
+          <input
+            type="search"
+            placeholder="Search customer, payment or reference..."
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="topbar-actions">
+
+        <button class="icon-button notification-button">
+          ♧
+          <span class="notification-dot"></span>
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div class="page-content">
+
+      <div class="module-header reports-header">
+
+        <div>
+
+          <h1>
+            Reports
+          </h1>
+
+          <p>
+            Review payment activity, outstanding balances and reconciliation performance.
+          </p>
+
+        </div>
+
+
+        <div class="reports-export-actions">
+
+          <button
+            class="secondary-button"
+            id="exportCsvButton"
+          >
+            Export CSV
+          </button>
+
+          <button
+            class="primary-button"
+            id="exportPdfButton"
+          >
+            Export PDF
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <section class="reports-filter-bar">
+
+        <div class="reports-filter-group">
+
+          <div class="form-group compact-form-group">
+
+            <label for="reportStartDate">
+              From
+            </label>
+
+            <input
+              type="date"
+              id="reportStartDate"
+              value="2026-08-01"
+            >
+
+          </div>
+
+
+          <div class="form-group compact-form-group">
+
+            <label for="reportEndDate">
+              To
+            </label>
+
+            <input
+              type="date"
+              id="reportEndDate"
+              value="2026-09-30"
+            >
+
+          </div>
+
+
+          <div class="form-group compact-form-group">
+
+            <label for="reportStatusFilter">
+              Payment Status
+            </label>
+
+            <select id="reportStatusFilter">
+
+              <option value="all">
+                All statuses
+              </option>
+
+              <option value="pending">
+                Pending
+              </option>
+
+              <option value="partially_paid">
+                Partially Paid
+              </option>
+
+              <option value="paid">
+                Paid
+              </option>
+
+              <option value="overdue">
+                Overdue
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="secondary-button"
+          id="applyReportFilters"
+        >
+          Apply Filters
+        </button>
+
+      </section>
+
+
+      <section class="reports-summary-grid">
+
+        <div class="reports-summary-card">
+
+          <span>
+            Total Received
+          </span>
+
+          <strong id="reportTotalReceived">₦0</strong>
+
+          <small id="reportReceivedNote">Loading...</small>
+
+        </div>
+
+
+        <div class="reports-summary-card">
+
+          <span>
+            Outstanding Balance
+          </span>
+
+          <strong id="reportOutstanding">₦0</strong>
+
+          <small>
+            Across active payment requests
+          </small>
+
+        </div>
+
+
+        <div class="reports-summary-card">
+
+          <span>
+            Payment Requests
+          </span>
+
+          <strong id="reportRequestCount">0</strong>
+
+          <small>
+            1 paid · 3 still active
+          </small>
+
+        </div>
+
+
+        <div class="reports-summary-card">
+
+          <span>
+            Reconciled Payments
+          </span>
+
+          <strong id="reportReconciledCount">0</strong>
+
+          <small>
+            50% of recorded payments
+          </small>
+
+        </div>
+
+      </section>
+
+
+      <section class="reports-two-column">
+
+        <div class="report-card">
+
+          <div class="section-header">
+
+            <div>
+              <h2>Collection Trend</h2>
+              <p>Recent recorded payment activity</p>
+            </div>
+
+          </div>
+
+
+          <div class="collection-chart">
+
+            <div class="chart-row">
+
+              <span>
+                21 Aug
+              </span>
+
+              <div class="chart-track">
+
+                <div
+                  class="chart-fill"
+                  style="width: 6%;"
+                ></div>
+
+              </div>
+
+              <strong>
+                ₦250K
+              </strong>
+
+            </div>
+
+
+            <div class="chart-row">
+
+              <span>
+                22 Aug
+              </span>
+
+              <div class="chart-track">
+
+                <div
+                  class="chart-fill"
+                  style="width: 100%;"
+                ></div>
+
+              </div>
+
+              <strong>
+                ₦4.5M
+              </strong>
+
+            </div>
+
+
+            <div class="chart-row">
+
+              <span>
+                05 Sep
+              </span>
+
+              <div class="chart-track">
+
+                <div
+                  class="chart-fill"
+                  style="width: 28%;"
+                ></div>
+
+              </div>
+
+              <strong>
+                ₦1.25M
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="report-card">
+
+          <div class="section-header">
+
+            <div>
+              <h2>Payment Request Status</h2>
+              <p>Current request distribution</p>
+            </div>
+
+          </div>
+
+
+          <div class="status-breakdown-list">
+
+            <div class="status-breakdown-row">
+
+              <div>
+
+                <span class="status-dot pending-dot"></span>
+
+                <strong>
+                  Pending
+                </strong>
+
+              </div>
+
+              <span id="reportStatusPending">0</span>
+
+            </div>
+
+
+            <div class="status-breakdown-row">
+
+              <div>
+
+                <span class="status-dot partial-dot"></span>
+
+                <strong>
+                  Partially Paid
+                </strong>
+
+              </div>
+
+              <span id="reportStatusPartial">0</span>
+
+            </div>
+
+
+            <div class="status-breakdown-row">
+
+              <div>
+
+                <span class="status-dot paid-dot"></span>
+
+                <strong>
+                  Paid
+                </strong>
+
+              </div>
+
+              <span id="reportStatusPaid">0</span>
+
+            </div>
+
+
+            <div class="status-breakdown-row">
+
+              <div>
+
+                <span class="status-dot overdue-dot"></span>
+
+                <strong>
+                  Overdue
+                </strong>
+
+              </div>
+
+              <span id="reportStatusOverdue">0</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="reports-two-column">
+
+        <div class="report-card">
+
+          <div class="section-header">
+
+            <div>
+              <h2>Reconciliation Status</h2>
+              <p>Recorded payment verification state</p>
+            </div>
+
+          </div>
+
+
+          <div class="reconciliation-report-list">
+
+            <div class="reconciliation-report-row">
+
+              <div>
+                <strong>Reconciled</strong>
+                <span>Verified payment records</span>
+              </div>
+
+              <strong id="reportReconReconciled">0</strong>
+
+            </div>
+
+
+            <div class="reconciliation-report-row">
+
+              <div>
+                <strong>Needs Review</strong>
+                <span>Awaiting verification</span>
+              </div>
+
+              <strong id="reportReconNeedsReview">0</strong>
+
+            </div>
+
+
+            <div class="reconciliation-report-row">
+
+              <div>
+                <strong>Unidentified</strong>
+                <span>Not yet matched</span>
+              </div>
+
+              <strong id="reportReconUnidentified">0</strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="report-card">
+
+          <div class="section-header">
+
+            <div>
+              <h2>Outstanding by Customer</h2>
+              <p>Current unpaid balances</p>
+            </div>
+
+          </div>
+
+
+          <div class="outstanding-report-list" id="reportOutstandingList"></div>
+
+        </div>
+
+      </section>
+
+
+      <section class="module-card">
+
+        <div class="reconciliation-table-header">
+
+          <div>
+
+            <h2>
+              Payment Request Report
+            </h2>
+
+            <p>
+              Summary of payment obligations and current balances.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table class="data-table reports-table">
+
+            <thead>
+
+              <tr>
+                <th>Request</th>
+                <th>Customer</th>
+                <th>Amount Due</th>
+                <th>Total Paid</th>
+                <th>Outstanding</th>
+                <th>Status</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody id="reportTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<div
+  class="toast"
+  id="reportToast"
+  hidden
+>
+
+  <div class="toast-icon">
+    ✓
+  </div>
+
+  <div>
+
+    <strong id="reportToastTitle">
+      Report updated
+    </strong>
+
+    <span id="reportToastText">
+      Report filters have been applied.
+    </span>
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../js/utils.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/app.js"></script>
+
 </body>
 </html>

@@ -3,18 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>PayTrack SME</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
-  <main>
-    <h1>PayTrack SME</h1>
-    <p>Step 1 project setup complete.</p>
+
+  <main class="auth-page">
+
+    <section class="auth-card">
+
+      <div class="auth-brand">
+
+        <div class="brand-mark">
+          PT
+        </div>
+
+        <div>
+          <h1>PayTrack SME</h1>
+          <p>Lightweight payment management for SMEs</p>
+        </div>
+
+      </div>
+
+
+      <div class="auth-intro">
+
+        <h2>
+          Manage payments with less manual work.
+        </h2>
+
+        <p>
+          Track customers, payment requests, transactions,
+          balances, receipts and reconciliation in one place.
+        </p>
+
+      </div>
+
+
+      <div class="auth-entry-actions">
+
+        <a
+          href="login.html"
+          class="primary-button auth-entry-button"
+        >
+          Sign In
+        </a>
+
+        <a
+          href="signup.html"
+          class="secondary-button auth-entry-button"
+        >
+          Create Account
+        </a>
+
+      </div>
+
+    </section>
+
   </main>
-  <script src="js/utils.js"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
-  <script src="js/app.js"></script>
+
+  <script>
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+
+        const {
+          data: {
+            session
+          }
+        } =
+          await window
+            .paytrackSupabase
+            .auth
+            .getSession();
+
+
+        if (session) {
+
+          window.location.replace(
+            "pages/dashboard.html"
+          );
+
+        }
+
+      }
+    );
+  </script>
+
 </body>
 </html>
