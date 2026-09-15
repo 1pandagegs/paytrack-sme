@@ -302,6 +302,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       .brand-preview-swatch img { width:100%; height:100%; object-fit:contain; padding:4px; box-sizing:border-box; background:#fff; }
       .organisation-identity-mark.has-logo { background:#fff !important; border:1px solid var(--border,#e5e7eb); overflow:hidden; }
       .organisation-identity-mark.has-logo img { width:100%; height:100%; object-fit:contain; padding:2px; box-sizing:border-box; }
+      .brand-mark.paytrack-product-logo { background:transparent !important; padding:0 !important; overflow:hidden; display:grid; place-items:center; }
+      .brand-mark.paytrack-product-logo img { width:100%; height:100%; object-fit:contain; display:block; }
       .summary-grid, .customer-summary-grid, .customer-detail-summary-grid, .metric-grid, .transaction-summary-grid, .reconciliation-summary-grid, .reports-summary-grid, .request-financial-grid {
         display:grid !important; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)) !important; gap:14px !important;
       }
@@ -327,6 +329,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   ensureWorkspaceStyles();
+
+  /* ==================================================
+     PAYTRACK PRODUCT LOGO
+  ================================================== */
+
+  function applyPayTrackProductLogo() {
+    const logoPath = window.location.pathname.includes('/pages/')
+      ? '../Paytrack Logo.png'
+      : 'Paytrack Logo.png';
+
+    document.querySelectorAll('.brand-mark').forEach(mark => {
+      mark.classList.add('paytrack-product-logo');
+      mark.textContent = '';
+
+      const image = document.createElement('img');
+      image.src = logoPath;
+      image.alt = 'PayTrack SME';
+      image.decoding = 'async';
+
+      mark.appendChild(image);
+    });
+  }
+
+  applyPayTrackProductLogo();
 
   let globalWorkspace = null;
 
