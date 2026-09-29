@@ -52,6 +52,7 @@
         <div class="settings-tabs" aria-label="Settings sections">
           <button type="button" class="settings-tab active" data-settings-tab="profile">Profile</button>
           <button type="button" class="settings-tab" data-settings-tab="branding">Organisation & Branding</button>
+          <button type="button" class="settings-tab" data-settings-tab="staff">Staff & Permissions</button>
           <button type="button" class="settings-tab" data-settings-tab="access">Access & Security</button>
           <button type="button" class="settings-tab" data-settings-tab="data">Data & Backup</button>
         </div>
@@ -85,6 +86,15 @@
               <div class="settings-actions"><button type="button" class="secondary-button" id="resetBrandButton">Use PayTrack Blue</button><button type="submit" class="primary-button">Save Branding</button></div>
               <div class="settings-success" id="settingsBrandMessage"></div>
             </form>
+          </section>
+
+          <section class="settings-panel" id="settingsPanel-staff">
+            <div class="settings-card">
+              <h2>Staff & Permissions</h2>
+              <p>View staff linked to this organisation. Administrators can change staff roles.</p>
+              <div id="staffPermissionNotice" style="font-size:12px;color:#667085;margin-bottom:14px;"></div>
+              <div style="overflow-x:auto;"><table class="data-table" style="width:100%;"><thead><tr><th>Staff member</th><th>Email</th><th>Role</th><th>Access</th></tr></thead><tbody id="staffPermissionsBody"><tr><td colspan="4">Loading staff...</td></tr></tbody></table></div>
+            </div>
           </section>
 
           <section class="settings-panel" id="settingsPanel-access">

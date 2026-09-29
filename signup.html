@@ -19,22 +19,19 @@
 <div class="signup-shell">
   <section class="signup-brand-panel">
     <div class="signup-logo"><div class="signup-logo-mark" id="signupLogoMark"><img src="Paytrack Logo.png" alt="PayTrack SME"></div><span>PayTrack SME</span></div>
-    <div class="signup-brand-copy"><h1>A payment workspace that looks like your organisation.</h1><p>Create your PayTrack account, name the workspace and choose the brand colour used across the application.</p></div>
-    <small style="color:#94a3b8">PayTrack SME · Lightweight payment management</small>
+    <div class="signup-brand-copy"><h1>A payment workspace that looks like your organisation.</h1><p>Create your PayTrack account and choose the case-study organisation you are joining.</p></div>
+    <small style="color:#94a3b8">PayTrack SME · Digital payment management</small>
   </section>
   <main class="signup-form-side">
     <form class="signup-card" id="signupForm">
       <h2>Create your account</h2>
-      <p>Set up your profile and workspace personalisation.</p>
+      <p>Set up your profile and select your organisation.</p>
       <div class="signup-grid">
         <div class="signup-field full"><label for="signupFullName">Full name</label><input id="signupFullName" type="text" autocomplete="name" required></div>
         <div class="signup-field full"><label for="signupEmail">Email address</label><input id="signupEmail" type="email" autocomplete="email" required></div>
         <div class="signup-field"><label for="signupPassword">Password</label><input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required></div>
         <div class="signup-field"><label for="signupConfirmPassword">Confirm password</label><input id="signupConfirmPassword" type="password" minlength="8" autocomplete="new-password" required></div>
-        <div class="signup-field full"><label for="signupWorkspaceName">Organisation / workspace name</label><input id="signupWorkspaceName" type="text" placeholder="e.g. AS5 Group" required></div>
-        <div class="signup-field"><label for="signupOrganisationCode">Organisation code</label><input id="signupOrganisationCode" type="text" placeholder="e.g. AS5" maxlength="20"></div>
-        <div class="signup-field"><label>Brand colour</label><div class="brand-field-row"><input id="signupBrandColor" type="color" value="#2563eb"><input id="signupBrandHex" type="text" value="#2563eb" maxlength="7"></div></div>
-        <div class="signup-field full"><label for="signupLogoUpload">Organisation logo (optional)</label><input id="signupLogoUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small style="color:#667085;">Used in the workspace and branded receipts.</small></div>
+        <div class="signup-field full"><label for="signupOrganisation">Organisation</label><select id="signupOrganisation" required style="min-height:44px;border:1px solid #d0d5dd;border-radius:9px;padding:0 12px;font:inherit;background:#fff;width:100%;box-sizing:border-box"><option value="">Select organisation</option><option value="AS5">AS5 Group</option><option value="SABALI">Sabali Limited</option></select><small style="color:#667085;">Your account will automatically be linked to the selected organisation as Staff.</small></div>
       </div>
       <button type="submit" class="primary-button signup-submit" id="signupSubmitButton">Create Account</button>
       <div class="signup-error" id="signupError" hidden></div>
